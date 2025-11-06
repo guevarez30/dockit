@@ -2,6 +2,48 @@
 
 A simple, prettier wrapper for Docker CLI commands. Dockit enhances common Docker commands with beautiful, colorful terminal output while maintaining full compatibility with the standard Docker CLI.
 
+## Examples
+
+### Pretty Container Listing
+
+![Dockit PS Screenshot](assets/screenshots/dockit-ps.png)
+
+**Features:**
+- ● Green indicator for running containers
+- ○ Gray indicator for stopped containers
+- Container ID shown first (12 chars)
+- Clean vertical dividers between columns
+- Port mappings clearly displayed
+- Human-readable uptime
+
+### Pretty Image Listing
+
+![Dockit Images Screenshot](assets/screenshots/dockit-images.png)
+
+**Features:**
+- Image ID shown first (12 chars)
+- Repository and tag in one column
+- Human-readable sizes (MB, GB)
+- Relative timestamps (days/weeks/months ago)
+- Total size summary
+
+### Before vs After
+
+**Before (docker ps):**
+```
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+abc123def456   nginx     ...       2h ago    Up 2h     80/tcp    nginx-web
+```
+
+**After (dockit ps):**
+```
+● abc123def456 │ nginx-web    │ running │ nginx:latest
+  ↪ Ports: 8080:80/tcp
+  ⏱ Up 2 hours
+```
+
+Cleaner. Prettier. Still Docker.
+
 ## Philosophy
 
 Dockit is a transparent wrapper around Docker. It makes common commands prettier, but for everything else, it simply passes through to the standard Docker CLI. If we haven't built out pretty formatting for a command yet, you'll get the traditional Docker response.
@@ -54,59 +96,7 @@ dockit logs myapp            # Standard docker logs
 **Pass-through Commands** (standard Docker output):
 - All other Docker commands work as normal: `run`, `build`, `exec`, `logs`, `pull`, `push`, `stop`, `start`, `rm`, `rmi`, etc.
 
-## Examples
-
-### Pretty Container Listing
-
-![Dockit PS Screenshot](assets/screenshots/dockit-ps.png)
-
-```bash
-$ dockit ps
-
-CONTAINERS
-──────────────────────────────────────────────────────────────────────────────────────
-● abc123def456 │ nginx-web                      │ running   │ nginx:latest
-  ↪ Ports: 8080:80/tcp
-  ⏱ Up 2 hours
-
-○ def456ghi789 │ postgres-db                    │ exited    │ postgres:14
-  ⏱ Exited (0) 5 minutes ago
-
-Total: 2 containers (1 running)
-```
-
-**Features:**
-- ● Green indicator for running containers
-- ○ Gray indicator for stopped containers
-- Container ID shown first (12 chars)
-- Clean vertical dividers between columns
-- Port mappings clearly displayed
-- Human-readable uptime
-
-### Pretty Image Listing
-
-![Dockit Images Screenshot](assets/screenshots/dockit-images.png)
-
-```bash
-$ dockit images
-
-IMAGES
-──────────────────────────────────────────────────────────────────────────────────────
-abc123def456 │ nginx:latest                             │ 142.5 MB    │ 2 days ago
-
-def456ghi789 │ postgres:14                              │ 376.2 MB    │ 1 week ago
-
-Total: 2 images (Total size: 518.7 MB)
-```
-
-**Features:**
-- Image ID shown first (12 chars)
-- Repository and tag in one column
-- Human-readable sizes (MB, GB)
-- Relative timestamps (days/weeks/months ago)
-- Total size summary
-
-### Pass-through Commands
+### Pass-through Examples
 
 ```bash
 # These work exactly like docker
@@ -163,18 +153,3 @@ MIT License - see LICENSE file for details
 ## Why Dockit?
 
 Docker's CLI output is functional but dense. Dockit makes it easier to scan and understand your Docker environment at a glance while maintaining 100% compatibility with the Docker CLI you know and love.
-
-**Before (docker ps):**
-```
-CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
-abc123def456   nginx     ...       2h ago    Up 2h     80/tcp    nginx-web
-```
-
-**After (dockit ps):**
-```
-● abc123def456 │ nginx-web    │ running │ nginx:latest
-  ↪ Ports: 8080:80/tcp
-  ⏱ Up 2 hours
-```
-
-Cleaner. Prettier. Still Docker.
