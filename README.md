@@ -2,8 +2,7 @@
 
 A simple, prettier wrapper for Docker CLI commands. Dockit enhances common Docker commands with beautiful, colorful terminal output while maintaining full compatibility with the standard Docker CLI.
 
-![Dockit Images Screenshot](assets/screenshots/dockit-images.png)
-
+![Dockit Images Screenshot](assets/screenshots/dockit.png)
 
 Cleaner. Prettier. Still Docker.
 
@@ -22,6 +21,7 @@ Dockit is a transparent wrapper around Docker. It makes common commands prettier
 ## Installation
 
 ### Prerequisites
+
 - Go 1.24 or higher
 - Docker daemon running
 
@@ -53,10 +53,12 @@ dockit logs myapp            # Standard docker logs
 ### Command Reference
 
 **Pretty Commands** (enhanced with colors and formatting):
+
 - `dockit ps [-a]` - List containers with ID, name, status, image, ports, and uptime
 - `dockit images` - List images with ID, repository:tag, size, and creation time
 
 **Pass-through Commands** (standard Docker output):
+
 - All other Docker commands work as normal: `run`, `build`, `exec`, `logs`, `pull`, `push`, `stop`, `start`, `rm`, `rmi`, etc.
 
 ### Pass-through Examples
@@ -72,6 +74,7 @@ dockit rm myapp
 ```
 
 ### Upcoming Pretty Commands
+
 - `dockit volume ls` - Pretty volume listing
 - `dockit network ls` - Pretty network listing
 - `dockit stats` - Enhanced real-time stats with progress bars
