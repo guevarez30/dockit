@@ -2,45 +2,8 @@
 
 A simple, prettier wrapper for Docker CLI commands. Dockit enhances common Docker commands with beautiful, colorful terminal output while maintaining full compatibility with the standard Docker CLI.
 
-## Examples
-
-### Pretty Container Listing
-
-![Dockit PS Screenshot](assets/screenshots/dockit-ps.png)
-
-**Features:**
-- ● Green indicator for running containers
-- ○ Gray indicator for stopped containers
-- Container ID shown first (12 chars)
-- Clean vertical dividers between columns
-- Port mappings clearly displayed
-- Human-readable uptime
-
-### Pretty Image Listing
-
 ![Dockit Images Screenshot](assets/screenshots/dockit-images.png)
 
-**Features:**
-- Image ID shown first (12 chars)
-- Repository and tag in one column
-- Human-readable sizes (MB, GB)
-- Relative timestamps (days/weeks/months ago)
-- Total size summary
-
-### Before vs After
-
-**Before (docker ps):**
-```
-CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
-abc123def456   nginx     ...       2h ago    Up 2h     80/tcp    nginx-web
-```
-
-**After (dockit ps):**
-```
-● abc123def456 │ nginx-web    │ running │ nginx:latest
-  ↪ Ports: 8080:80/tcp
-  ⏱ Up 2 hours
-```
 
 Cleaner. Prettier. Still Docker.
 
@@ -107,32 +70,6 @@ dockit logs -f myapp
 dockit stop myapp
 dockit rm myapp
 ```
-
-## Architecture
-
-```
-dockit/
-├── main.go              # CLI entry point and command router
-├── pretty/              # Pretty printers for enhanced commands
-│   ├── containers.go    # Pretty printer for 'docker ps'
-│   └── images.go        # Pretty printer for 'docker images'
-└── .claude/             # Development documentation
-    ├── roadmap.md       # Feature roadmap
-    ├── plan.md          # Development plan
-    └── overview.md      # Project overview
-```
-
-## Design Principles
-
-1. **Transparent** - Pass through to Docker for anything we don't enhance
-2. **Simple** - No complex TUI, just prettier command output
-3. **Compatible** - Works exactly like Docker for all unenhanced commands
-4. **Clean** - Minimal borders, maximum readability
-5. **Colorful** - Status indicators and color-coding for quick scanning
-
-## Roadmap
-
-See [.claude/roadmap.md](.claude/roadmap.md) for the complete feature roadmap.
 
 ### Upcoming Pretty Commands
 - `dockit volume ls` - Pretty volume listing
