@@ -58,7 +58,7 @@ dockit logs myapp            # Standard docker logs
 
 ### Pretty Container Listing
 
-<!-- Add screenshot here -->
+![Dockit PS Screenshot](assets/screenshots/dockit-ps.png)
 
 ```bash
 $ dockit ps
@@ -85,7 +85,7 @@ Total: 2 containers (1 running)
 
 ### Pretty Image Listing
 
-<!-- Add screenshot here -->
+![Dockit Images Screenshot](assets/screenshots/dockit-images.png)
 
 ```bash
 $ dockit images
