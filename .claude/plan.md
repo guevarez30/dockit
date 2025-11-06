@@ -80,18 +80,31 @@ func PrintVolumes(args []string) {
     }
 
     // 3. Format and print with colors
-    cyan.Println("\n╭─────────────────────────────────────────────╮")
-    cyan.Printf("│ %-43s │\n", "VOLUMES")
-    cyan.Println("├─────────────────────────────────────────────┤")
+    fmt.Println()
+    cyan.Println("VOLUMES")
+    cyan.Println(strings.Repeat("─", 90))
 
     for _, vol := range volumes.Volumes {
-        // Pretty print each volume
-        cyan.Print("│ ")
-        blue.Printf("%-30s", vol.Name)
-        // ... more formatting
+        // Pre-calculate padding to avoid color code alignment issues
+        nameWidth := 40
+        name := vol.Name
+        if len(name) > nameWidth {
+            name = name[:nameWidth-3] + "..."
+        }
+        namePadded := name + strings.Repeat(" ", nameWidth-len(name))
+
+        // Print with colors and dividers
+        blue.Print(namePadded)
+        gray.Print(" │ ")
+        fmt.Printf("%-20s", vol.Driver)
+        gray.Print(" │ ")
+        fmt.Println(vol.Scope)
+
+        fmt.Println() // Blank line between items
     }
 
-    cyan.Println("╰─────────────────────────────────────────────╯\n")
+    // Summary
+    fmt.Printf("Total: %d volumes\n", len(volumes.Volumes))
 }
 ```
 
@@ -163,28 +176,31 @@ var (
 All pretty printers should follow this format:
 
 ```
-╭─────────────────────────────────────────╮
-│ SECTION TITLE                           │
-├─────────────────────────────────────────┤
-│ ● Primary Info   │ Status │ Details    │
-│   ↪ Sub-info: value                     │
-│   ⏱ Timestamp info                      │
-├─────────────────────────────────────────┤
-│ ○ Next Item      │ Status │ Details    │
-│   ...                                   │
-├─────────────────────────────────────────┤
-╰─────────────────────────────────────────╯
+SECTION TITLE
+──────────────────────────────────────────────────
+● [id] │ [column1]  │ [column2] │ [column3]
+  ↪ Sub-info: value
+  ⏱ Timestamp info
+
+○ [id] │ [column1]  │ [column2] │ [column3]
+  ↪ Sub-info: value
+  ⏱ Timestamp info
 
 Summary: X items (Y active)
 ```
 
+**Important Rules:**
+- NO side borders (no │ on left/right edges)
+- Only vertical dividers (│) between columns
+- Title and horizontal line at top
+- Pre-calculate padding to avoid color code alignment issues
+- Blank line between items for readability
+
 ### Box Drawing Characters
 
 Use these Unicode characters:
-- `╭` `╮` `╰` `╯` - Corners
-- `─` - Horizontal line
-- `│` - Vertical line
-- `├` `┤` `┬` `┴` - T-junctions
+- `─` - Horizontal line (for header underline)
+- `│` - Vertical line (for column dividers only, NOT borders)
 
 ### Status Indicators
 
@@ -275,6 +291,53 @@ Target performance overhead:
 2. **Efficient formatting** - Pre-allocate strings when possible
 3. **Lazy loading** - Only fetch data that will be displayed
 4. **Concurrent operations** - Use goroutines for independent operations
+
+---
+
+## Important Implementation Notes
+
+### Color Code Alignment Issue
+
+**Problem:** ANSI color codes interfere with string padding/alignment
+- `Printf("%-30s", coloredString)` doesn't work correctly
+- The padding counts color codes as characters
+
+**Solution:** Pre-calculate padding, then print colored text
+```go
+// ❌ WRONG - alignment will be off
+cyan.Printf("│ ")
+blue.Printf("%-30s", name)
+fmt.Printf(" │ ")
+
+// ✅ CORRECT - pre-calculate padding
+nameWidth := 30
+namePadded := name + strings.Repeat(" ", nameWidth-len(name))
+blue.Print(namePadded)
+gray.Print(" │ ")
+```
+
+**Key principle:** Calculate padding based on visible text length, not the length of colored strings.
+
+### Side Borders
+
+**Don't use side borders:**
+```go
+// ❌ WRONG - creates side borders
+cyan.Print("│ ")
+// ... content ...
+cyan.Println(" │")
+
+// ✅ CORRECT - no side borders
+// ... content with dividers between columns ...
+fmt.Println()
+```
+
+### Vertical Dividers
+
+**Use gray vertical dividers between columns:**
+```go
+gray.Print(" │ ")  // Between columns
+```
 
 ---
 

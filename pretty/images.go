@@ -34,55 +34,53 @@ func PrintImages(args []string) {
 	}
 
 	// Print header
-	cyan.Println("\n╭─────────────────────────────────────────────────────────────────────────────────╮")
-	cyan.Printf("│ %-78s │\n", "IMAGES")
-	cyan.Println("├─────────────────────────────────────────────────────────────────────────────────┤")
+	fmt.Println()
+	cyan.Println("IMAGES")
+	cyan.Println(strings.Repeat("─", 90))
 
 	var totalSize int64
 
 	// Print images
 	for _, img := range images {
-		// Get repository and tag
-		repoTag := "<none>:<none>"
-		if len(img.RepoTags) > 0 {
-			repoTag = img.RepoTags[0]
-		}
-
-		// Truncate if too long
-		if len(repoTag) > 45 {
-			repoTag = repoTag[:42] + "..."
-		}
-
-		// Format size
-		size := formatSize(img.Size)
-
-		// Format created time
-		created := formatCreatedTime(img.Created)
-
 		// Image ID (short)
 		imageID := img.ID
 		if strings.HasPrefix(imageID, "sha256:") {
 			imageID = imageID[7:19] // Get first 12 chars after sha256:
 		}
+		idWidth := 12
+		idPadded := imageID + strings.Repeat(" ", idWidth-len(imageID))
 
-		cyan.Print("│ ")
-		blue.Printf("%-45s", repoTag)
-		fmt.Printf(" │ ")
-		green.Printf("%-10s", size)
-		fmt.Printf(" │ ")
-		gray.Printf("%-12s", imageID)
-		cyan.Println(" │")
+		// Get repository and tag
+		repoTag := "<none>:<none>"
+		if len(img.RepoTags) > 0 {
+			repoTag = img.RepoTags[0]
+		}
+		repoWidth := 40
+		if len(repoTag) > repoWidth {
+			repoTag = repoTag[:repoWidth-3] + "..."
+		}
+		repoPadded := repoTag + strings.Repeat(" ", repoWidth-len(repoTag))
 
-		cyan.Print("│   ")
-		gray.Printf("⏱ Created: %s", created)
-		fmt.Printf("%*s", 78-len(created)-14, "")
-		cyan.Println("│")
-		cyan.Println("├─────────────────────────────────────────────────────────────────────────────────┤")
+		// Format size
+		size := formatSize(img.Size)
+		sizeWidth := 12
+		sizePadded := size + strings.Repeat(" ", sizeWidth-len(size))
 
+		// Format created time
+		created := formatCreatedTime(img.Created)
+
+		// Print main line
+		gray.Print(idPadded)
+		gray.Print(" │ ")
+		blue.Print(repoPadded)
+		gray.Print(" │ ")
+		green.Print(sizePadded)
+		gray.Print("│ ")
+		gray.Println(created)
+
+		fmt.Println()
 		totalSize += img.Size
 	}
-
-	cyan.Println("╰─────────────────────────────────────────────────────────────────────────────────╯\n")
 
 	// Summary
 	fmt.Printf("Total: %d images", len(images))
