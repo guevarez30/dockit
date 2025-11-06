@@ -1,40 +1,17 @@
 # Dockit 🐳
 
-A modern, interactive terminal UI for managing Docker containers, images, volumes, and networks, built with Go and Bubble Tea.
+A simple, prettier wrapper for Docker CLI commands. Dockit enhances common Docker commands with beautiful, colorful terminal output while maintaining full compatibility with the standard Docker CLI.
 
-## ✨ Highlights
+## Philosophy
 
-- 📊 **Live Container Stats** - Real-time CPU, memory, network, and disk I/O monitoring
-- 🔍 **Deep Inspection** - View environment variables, ports, mounts, and network configs
-- 🎨 **Beautiful UI** - Modern terminal interface with vim-style navigation
-- ⚡ **Fast & Lightweight** - Built with Go for optimal performance
-- 🎯 **Intuitive** - Context-aware help system and simple keyboard shortcuts
+Dockit is a transparent wrapper around Docker. It makes common commands prettier, but for everything else, it simply passes through to the standard Docker CLI. If we haven't built out pretty formatting for a command yet, you'll get the traditional Docker response.
 
 ## Features
 
-- **Dashboard View**: Overview of your Docker environment with container and image statistics
-- **Container Management**:
-  - List all containers (running and stopped)
-  - Start, stop, restart containers
-  - Remove containers
-  - View real-time logs
-  - **Detailed container inspection** with live stats (CPU, memory, network I/O, block I/O)
-  - View environment variables, configuration, ports, volumes, and networks
-- **Image Management**:
-  - List all images with size information
-  - Remove images (including dangling images)
-  - View image details
-- **Volume Management**:
-  - List all Docker volumes
-  - View volume details (driver, scope, mountpoint)
-  - Remove volumes
-- **Network Management**:
-  - List all Docker networks
-  - View network details (driver, scope, ID)
-  - Remove user-created networks
-- **Modern TUI**: Beautiful, responsive interface with vim-style keybindings
-- **Color-coded Status**: Easy identification of container states (running, stopped, paused)
-- **Interactive Help System**: Context-aware help overlay accessible with `?` key
+- **Pretty `docker ps`** - Beautiful, colorful container listings with status indicators
+- **Pretty `docker images`** - Enhanced image listings with formatted sizes and timestamps
+- **Full Docker Compatibility** - All other Docker commands work exactly as they do with `docker`
+- **Zero Configuration** - Works out of the box with your existing Docker setup
 
 ## Installation
 
@@ -52,166 +29,100 @@ go build -o dockit
 
 ## Usage
 
-Simply run the compiled binary:
+Use `dockit` exactly like you would use `docker`:
 
 ```bash
-./dockit
+# Pretty commands (enhanced output)
+dockit ps                    # List running containers with colors
+dockit ps -a                 # List all containers with colors
+dockit images                # List images with pretty formatting
+
+# All other commands pass through to docker
+dockit run -d nginx          # Standard docker run
+dockit build -t myapp .      # Standard docker build
+dockit exec -it web bash     # Standard docker exec
+dockit logs myapp            # Standard docker logs
 ```
 
-### Quick Start Examples
+### Command Reference
 
-**View Container Stats**
-1. Launch Dockit: `./dockit`
-2. Navigate to a running container using `↑`/`↓`
-3. Press `enter` to view detailed stats (CPU, memory, network I/O)
-4. Press `r` to refresh stats in real-time
-5. Press `esc` to return to containers view
+**Pretty Commands** (enhanced with colors and formatting):
+- `dockit ps [-a]` - List containers
+- `dockit images` - List images
 
-**View Container Logs**
-1. Select a container with `↑`/`↓`
-2. Press `L` (Shift+l) to view logs
-3. Scroll through logs with `↑`/`↓`
-4. Press `esc` to return
+**Pass-through Commands** (standard Docker output):
+- All other Docker commands work as normal: `run`, `build`, `exec`, `logs`, `pull`, `push`, `stop`, `start`, `rm`, `rmi`, etc.
 
-**Start/Stop Containers**
-1. Navigate to a stopped container
-2. Press `s` to start or `x` to stop
-3. Press `r` to restart a running container
+## Examples
 
-**Remove Unused Resources**
-1. Press `tab` to switch to Images/Volumes/Networks view
-2. Navigate to unused resources
-3. Press `d` to remove selected items
+### Pretty Container Listing
+```bash
+$ dockit ps
 
-### Keybindings
+╭─────────────────────────────────────────────────────────────────────────────────╮
+│ CONTAINERS                                                                      │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│ ● nginx-web              │ running    │ nginx:latest                           │
+│   ↪ Ports: 80:8080/tcp                                                         │
+│   ⏱ Up 2 hours                                                                  │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│ ○ postgres-db            │ exited     │ postgres:14                            │
+│   ⏱ Exited (0) 5 minutes ago                                                   │
+├─────────────────────────────────────────────────────────────────────────────────┤
+╰─────────────────────────────────────────────────────────────────────────────────╯
 
-#### Global
-- `tab` / `shift+tab` - Switch between views (forward/backward)
-- `q` or `ctrl+c` - Quit application
-- `?` - Show context-aware help overlay
-- `ctrl+r` - Refresh current view
+Total: 2 containers (1 running)
+```
 
-#### Navigation
-- `↑` or `k` - Move up
-- `↓` or `j` - Move down
-- `←` or `h` - Move left
-- `→` or `l` - Move right
+### Pretty Image Listing
+```bash
+$ dockit images
 
-#### Container View
-- `s` - Start selected container
-- `x` - Stop selected container
-- `r` - Restart selected container
-- `d` - Remove selected container
-- `L` - View logs of selected container
-- `enter` - View detailed container information (stats, config, env vars)
-- `ctrl+r` - Refresh container list
+╭─────────────────────────────────────────────────────────────────────────────────╮
+│ IMAGES                                                                          │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│ nginx:latest                          │ 142.5 MB   │ abc123def456            │
+│   ⏱ Created: 2 days ago                                                        │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│ postgres:14                           │ 376.2 MB   │ def456ghi789            │
+│   ⏱ Created: 1 week ago                                                        │
+├─────────────────────────────────────────────────────────────────────────────────┤
+╰─────────────────────────────────────────────────────────────────────────────────╯
 
-#### Images View
-- `d` - Remove selected image
-- `ctrl+r` - Refresh image list
+Total: 2 images (Total size: 518.7 MB)
+```
 
-#### Volumes View
-- `d` - Remove selected volume
-- `ctrl+r` - Refresh volume list
-
-#### Networks View
-- `d` - Remove selected network (system networks cannot be removed)
-- `ctrl+r` - Refresh network list
-
-#### Logs View
-- `↑`/`↓` - Scroll through logs
-- `esc` - Return to container view
-
-#### Container Details View
-- `↑`/`↓` - Scroll through details
-- `r` - Refresh stats
-- `esc` - Return to container view
+### Pass-through Commands
+```bash
+# These work exactly like docker
+dockit run -d -p 8080:80 nginx
+dockit build -t myapp:latest .
+dockit exec -it mycontainer bash
+dockit logs -f myapp
+```
 
 ## Architecture
 
 ```
 dockit/
-├── main.go                # Application entry point
-├── docker/                # Docker client wrapper
-│   └── client.go
-├── ui/                    # Bubble Tea UI components
-│   ├── model.go           # Main application model
-│   ├── dashboard.go       # Dashboard view
-│   ├── containers.go      # Containers view
-│   ├── container_details.go # Container details & stats view
-│   ├── images.go          # Images view
-│   ├── volumes.go         # Volumes view
-│   ├── networks.go        # Networks view
-│   ├── logs.go            # Logs viewer
-│   ├── styles.go          # Lipgloss styles
-│   └── keys.go            # Keybindings
-└── components/            # Reusable components
+├── main.go              # CLI entry point and command router
+├── pretty/              # Pretty printers for enhanced commands
+│   ├── containers.go    # Pretty printer for 'docker ps'
+│   └── images.go        # Pretty printer for 'docker images'
+└── .claude/             # Development documentation
+    ├── roadmap.md       # Feature roadmap
+    └── plan.md          # Development plan
 ```
-
-## Technology Stack
-
-- **[Bubble Tea](https://github.com/charmbracelet/bubbletea)** - Terminal UI framework using The Elm Architecture
-- **[Lipgloss](https://github.com/charmbracelet/lipgloss)** - Style definitions and rendering
-- **[Bubbles](https://github.com/charmbracelet/bubbles)** - Common TUI components
-- **[Docker SDK](https://github.com/docker/docker)** - Official Docker Engine API client
-
-## Screenshots
-
-### Containers View
-View and manage all your Docker containers with real-time status updates:
-```
-┌─ Containers ─┬─ Images ─┬─ Volumes ─┬─ Networks ─┐
-│                                                    │
-│  ● nginx-proxy      running    nginx:latest       │
-│  ○ postgres-db      stopped    postgres:14        │
-│  ● redis-cache      running    redis:alpine       │
-└────────────────────────────────────────────────────┘
-```
-
-### Container Details View
-Press `enter` on any container to view detailed stats and configuration:
-```
-STATISTICS
-  CPU:         12.50%
-  Memory:      245.3 MiB / 2048.0 MiB (11.98%)
-  Network I/O: 1.2 MiB / 856.3 KiB
-  Block I/O:   45.2 MiB / 12.1 MiB
-
-ENVIRONMENT VARIABLES
-  PATH=/usr/local/sbin:/usr/local/bin
-  NODE_ENV=production
-  DATABASE_URL=postgresql://...
-
-CONFIGURATION
-  Image:       nginx:latest
-  Status:      Running
-  Ports:       80/tcp, 443/tcp
-  Port Bindings:
-    80/tcp -> 0.0.0.0:8080
-```
-
-## Design Philosophy
-
-Dockit is inspired by LazyDocker but with a fresh, modern aesthetic:
-- Clean, card-based layouts
-- Vibrant color scheme (purple, pink, cyan)
-- Smooth vim-style navigation
-- Intuitive keyboard shortcuts
-- Real-time updates and live container stats
 
 ## Roadmap
 
-- [ ] Docker Compose support
-- [x] Volume management
-- [x] Network management
-- [x] Container stats (CPU, memory, I/O)
-- [x] Container details inspection
-- [x] Interactive help system
-- [ ] Fuzzy search/filtering
-- [ ] Bulk operations
-- [ ] Export container configs
-- [ ] Theme customization
-- [ ] Configuration file support
+See [.claude/roadmap.md](.claude/roadmap.md) for the complete feature roadmap.
+
+### Upcoming Pretty Commands
+- `dockit volumes` - Pretty volume listing
+- `dockit networks` - Pretty network listing
+- `dockit stats` - Enhanced real-time stats
+- `dockit logs` - Colorized log output
 
 ## Contributing
 
@@ -221,7 +132,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 MIT License - see LICENSE file for details
 
-## Acknowledgments
+## Why Dockit?
 
-- Inspired by [LazyDocker](https://github.com/jesseduffield/lazydocker)
-- Built with the amazing [Charm](https://charm.sh) ecosystem
+Docker's CLI output is functional but dense. Dockit makes it easier to scan and understand your Docker environment at a glance while maintaining 100% compatibility with the Docker CLI you know and love.
