@@ -14,6 +14,7 @@ Dockit is a transparent wrapper around Docker. It makes common commands prettier
 
 - **Pretty `docker ps`** - Beautiful, colorful container listings with status indicators and container IDs
 - **Pretty `docker images`** - Enhanced image listings with formatted sizes and timestamps
+- **Interactive `docker logs`** - Full-featured TUI with search, scroll, and follow mode
 - **Full Docker Compatibility** - All other Docker commands work exactly as they do with `docker`
 - **Zero Configuration** - Works out of the box with your existing Docker setup
 - **Clean Format** - No cluttered borders, just clean vertical dividers between columns
@@ -42,12 +43,13 @@ Use `dockit` exactly like you would use `docker`:
 dockit ps                    # List running containers with colors
 dockit ps -a                 # List all containers with colors
 dockit images                # List images with pretty formatting
+dockit logs myapp            # Interactive log viewer with search
+dockit logs -f myapp         # Follow logs with live updates
 
 # All other commands pass through to docker
 dockit run -d nginx          # Standard docker run
 dockit build -t myapp .      # Standard docker build
 dockit exec -it web bash     # Standard docker exec
-dockit logs myapp            # Standard docker logs
 ```
 
 ### Command Reference
@@ -56,10 +58,36 @@ dockit logs myapp            # Standard docker logs
 
 - `dockit ps [-a]` - List containers with ID, name, status, image, ports, and uptime
 - `dockit images` - List images with ID, repository:tag, size, and creation time
+- `dockit logs [-f] CONTAINER` - Interactive TUI log viewer with search and scroll
 
 **Pass-through Commands** (standard Docker output):
 
-- All other Docker commands work as normal: `run`, `build`, `exec`, `logs`, `pull`, `push`, `stop`, `start`, `rm`, `rmi`, etc.
+- All other Docker commands work as normal: `run`, `build`, `exec`, `pull`, `push`, `stop`, `start`, `rm`, `rmi`, etc.
+
+### Interactive Logs TUI
+
+The `logs` command opens an interactive terminal UI with powerful features:
+
+**Controls:**
+- `/` - Enter search mode (supports regex)
+- `n` / `N` - Jump to next/previous search match
+- `space` - Pause/resume log streaming
+- `↑` `↓` or `j` `k` - Scroll up/down
+- `PgUp` / `PgDn` - Page up/down
+- `g` / `G` - Jump to top/bottom
+- `q` or `Ctrl+C` - Quit
+
+**Example:**
+```bash
+# Open interactive log viewer
+dockit logs myapp
+
+# Follow logs with live updates
+dockit logs -f myapp
+
+# In the TUI, press '/' then type 'error' to search
+# Press 'n' to jump between matches
+```
 
 ### Pass-through Examples
 
@@ -68,7 +96,6 @@ dockit logs myapp            # Standard docker logs
 dockit run -d -p 8080:80 nginx
 dockit build -t myapp:latest .
 dockit exec -it mycontainer bash
-dockit logs -f myapp
 dockit stop myapp
 dockit rm myapp
 ```
@@ -78,7 +105,6 @@ dockit rm myapp
 - `dockit volume ls` - Pretty volume listing
 - `dockit network ls` - Pretty network listing
 - `dockit stats` - Enhanced real-time stats with progress bars
-- `dockit logs` - Colorized log output with level highlighting
 
 ## Contributing
 

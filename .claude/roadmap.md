@@ -58,16 +58,20 @@ Dockit is a transparent, prettier wrapper for Docker CLI. We enhance common Dock
 ## Phase 3: Interactive Enhancements
 **Goal: Add light interactivity to static commands**
 
+### Completed Features
+- [x] Interactive `docker logs` TUI
+  - Built-in search with regex support
+  - Scroll through history (arrows, PgUp/PgDn, vim keys)
+  - Follow mode for live streaming
+  - Pause/resume capability
+  - Jump to next/previous match
+  - Preserves original log colors from containers
+
 ### Planned Features
 - [ ] Pretty printer for `docker stats`
   - Real-time colorful stats output
   - Progress bars for CPU/memory usage
   - Formatted data rates
-
-- [ ] Enhanced `docker logs` output
-  - Syntax highlighting for common log formats
-  - Color-coded log levels (ERROR, WARN, INFO, DEBUG)
-  - Timestamp formatting
 
 - [ ] Pretty printer for `docker inspect`
   - Formatted JSON with syntax highlighting
@@ -129,14 +133,15 @@ Dockit is a transparent, prettier wrapper for Docker CLI. We enhance common Dock
 
 ## Versioning Strategy
 
-### v0.1.0 (Current)
+### v0.1.0 ✅
 - Basic wrapper with `ps` and `images` pretty printers
 
-### v0.2.0
-- Add `volumes`, `networks`, and `system df` pretty printers
+### v0.2.0 (Current)
+- Add interactive `logs` TUI with search and follow mode
+- Next: `volumes`, `networks`, and `system df` pretty printers
 
 ### v0.3.0
-- Add `stats`, `logs`, and `inspect` enhancements
+- Add `stats` and `inspect` enhancements
 
 ### v1.0.0
 - All core listing commands have pretty printers

@@ -24,6 +24,9 @@ func main() {
 	case "images":
 		// Pretty print docker images
 		pretty.PrintImages(os.Args[2:])
+	case "logs":
+		// Pretty print docker logs with search
+		pretty.PrintLogs(os.Args[2:])
 	default:
 		// Pass through to docker command for everything else
 		runDockerCommand(os.Args[1:])
@@ -38,6 +41,7 @@ func printUsage() {
 	fmt.Println("Pretty Commands (enhanced output):")
 	fmt.Println("  ps              List containers with pretty formatting")
 	fmt.Println("  images          List images with pretty formatting")
+	fmt.Println("  logs            View container logs with search and highlighting")
 	fmt.Println()
 	fmt.Println("All other commands are passed directly to Docker:")
 	fmt.Println("  dockit run [...]         -> docker run [...]")
@@ -49,6 +53,7 @@ func printUsage() {
 	fmt.Println("  dockit ps                    # Pretty container list")
 	fmt.Println("  dockit ps -a                 # All containers (pretty)")
 	fmt.Println("  dockit images                # Pretty image list")
+	fmt.Println("  dockit logs --search error myapp  # View logs with search")
 	fmt.Println("  dockit run -d nginx          # Standard docker run")
 }
 

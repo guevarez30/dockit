@@ -15,7 +15,9 @@ dockit/
 ├── main.go              # Entry point and command router
 ├── pretty/              # Pretty printer implementations
 │   ├── containers.go    # docker ps
-│   └── images.go        # docker images
+│   ├── images.go        # docker images
+│   ├── logs.go          # docker logs (entry point)
+│   └── logs_tui.go      # Interactive TUI for logs
 ├── go.mod               # Dependencies
 └── .claude/             # Documentation
     ├── roadmap.md       # Feature roadmap
@@ -245,6 +247,26 @@ Test error scenarios:
 
 ---
 
+## Implemented Commands
+
+1. **docker ps** ✅ (Phase 1)
+   - Color-coded status indicators
+   - Clean table format with vertical dividers
+   - Shows container ID, name, status, image, ports
+
+2. **docker images** ✅ (Phase 1)
+   - Formatted sizes (KB, MB, GB)
+   - Relative timestamps (days/weeks/months ago)
+   - Repository and tag display
+
+3. **docker logs** ✅ (Phase 3)
+   - Interactive TUI with Bubble Tea
+   - Built-in search with regex support
+   - Scroll through history
+   - Follow mode for live streaming
+   - Pause/resume capability
+   - Preserves original log colors
+
 ## Next Commands to Implement
 
 ### Priority Order
@@ -268,11 +290,6 @@ Test error scenarios:
    - Real-time stats
    - Progress bars for usage
    - Colorful output
-
-5. **docker logs** (Phase 3)
-   - Log level highlighting
-   - Timestamp formatting
-   - Maintain streaming capability
 
 ---
 
@@ -349,6 +366,9 @@ gray.Print(" │ ")  // Between columns
 require (
     github.com/docker/docker v28.5.1+incompatible  // Docker API client
     github.com/fatih/color v1.18.0                 // Terminal colors
+    github.com/charmbracelet/bubbletea v1.3.10     // TUI framework
+    github.com/charmbracelet/bubbles v0.21.0       // TUI components
+    github.com/charmbracelet/lipgloss v1.1.0       // Terminal styling
 )
 ```
 
@@ -356,6 +376,9 @@ require (
 
 - **docker/docker**: Official Docker SDK for Go - required for Docker API access
 - **fatih/color**: Simple, widely-used color library for terminal output
+- **bubbletea**: Modern TUI framework for interactive terminal applications (used in logs command)
+- **bubbles**: Reusable TUI components (textinput for search)
+- **lipgloss**: Terminal styling library for TUI
 
 ### Adding New Dependencies
 
